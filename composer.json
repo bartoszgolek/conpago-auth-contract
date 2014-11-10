@@ -1,6 +1,6 @@
 {
-	"name": "saigon/conpago-auth",
-	"description": "Conpago.Auth",
+	"name": "saigon/conpago-auth-contract",
+	"description": "Conpago.Auth.Contract",
 	"version": "0.0.1-alpha",
 	"type": "library",
 	"authors": [
