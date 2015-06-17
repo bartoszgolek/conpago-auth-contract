@@ -6,7 +6,7 @@
 	 * Time: 15:30
 	 */
 
-	namespace Saigon\Conpago\Auth\Contract;
+	namespace Conpago\Auth\Contract;
 
 	interface ISession
 	{

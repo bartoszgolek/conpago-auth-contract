@@ -1,5 +1,5 @@
 {
-	"name": "saigon/conpago-auth-contract",
+	"name": "conpago/conpago-auth-contract",
 	"description": "Conpago framework authorization abstraction layer.",
 	"version": "0.0.1-alpha",
 	"type": "library",
@@ -22,7 +22,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"Saigon\\Conpago\\Auth\\Contract\\": "src/"
+			"Conpago\\Auth\\Contract\\": "src/"
 		}
 	}
 }

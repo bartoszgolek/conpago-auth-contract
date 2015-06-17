@@ -6,7 +6,7 @@
 	 * Time: 09:15
 	 */
 
-	namespace Saigon\Conpago\Auth\Contract;
+	namespace Conpago\Auth\Contract;
 
 
 	interface IAuthModel
