@@ -1,105 +1,169 @@
 <?php
-	/**
-	 * Created by PhpStorm.
-	 * User: Bartosz Gołek
-	 * Date: 09.11.13
-	 * Time: 15:30
-	 */
+/**
+ * Created by PhpStorm.
+ * User: Bartosz Gołek
+ * Date: 09.11.13
+ * Time: 15:30
+ *
+ * @package    Conpago-Auth-Contract
+ * @subpackage Base
+ * @author     Bartosz Gołek <bartosz.golek@gmail.com>
+ * @copyright  Copyright (c) 2015, Bartosz Gołek
+ */
 
-	namespace Conpago\Auth\Contract;
+namespace Conpago\Auth\Contract;
 
-	interface ISession
-	{
-		/**
-		 * @return bool
-		 */
-		public function destroy();
+/**
+ * Provides object oriented access to PHP sessions.
+ */
+interface ISession
+{
 
-		/**
-		 * @return string
-		 */
-		public function getId();
+    /**
+     * Destroys all data registered to a session.
+     * Wrapper for PHP session_destroy() function.
+     *
+     * @return boolean Returns TRUE on success or FALSE on failure.
+     */
+    public function destroy();
 
-		/**
-		 * @param string $sessionId
-		 *
-		 * @return void
-		 */
-		public function setId($sessionId);
+    /**
+     * Get the current session id.
+     * Wrapper for PHP session_id() function.
+     *
+     * @return string Returns the session id for the current session or
+     * the empty string ("") if there is no current session (no current session id exists).
+     */
+    public function getId();
 
-		/**
-		 * @return string
-		 */
-		public function getName();
+    /**
+     * Set the current session id.
+     * Wrapper for PHP session_id() function.
+     *
+     * @param string $sessionId Id to replace the current session id.
+     *
+     * @return void
+     */
+    public function setId($sessionId);
 
-		/**
-		 * @param string $name
-		 *
-		 * @return void
-		 */
-		public function setName($name);
+    /**
+     * Get the current session name.
+     * Wrapper for PHP session_name() function.
+     *
+     * @return string Returns the name of the current session.
+     */
+    public function getName();
 
-		/**
-		 * @return bool
-		 */
-		public function regenerateId();
+    /**
+     * Set the current session name.
+     * Wrapper for PHP session_name() function.
+     *
+     * @param string $name The session name references the name of the session, which is used in
+     * cookies and URLs (e.g. PHPSESSID).
+     *
+     * @return void
+     */
+    public function setName($name);
 
-		/**
-		 * @return bool
-		 */
-		public function regenerateIdAndRemoveOldSession();
+    /**
+     * Update the current session id with a newly generated one.
+     * Wrapper for PHP session_regenerate_id(false) function.
+     *
+     * @return boolean Returns TRUE on success or FALSE on failure.
+     */
+    public function regenerateId();
 
-		/**
-		 * @return string
-		 */
-		public function getSavePath();
+    /**
+     * Update the current session id with a newly generated one and delete old associated session file.
+     * Wrapper for PHP session_regenerate_id(true) function.
+     *
+     * @return boolean Returns TRUE on success or FALSE on failure.
+     */
+    public function regenerateIdAndRemoveOldSession();
 
-		/**
-		 * @param string $path
-		 *
-		 * @return void
-		 */
-		public function setSavePath($path);
+    /**
+     * Get the current session save path.
+     * Wrapper for PHP session_save_path() function.
+     *
+     * @return string Returns the path of the current directory used for data storage.
+     */
+    public function getSavePath();
 
-		/**
-		 * @return bool
-		 */
-		public function start();
+    /**
+     * Set the current session save path.
+     * Wrapper for PHP session_save_path() function.
+     *
+     * @param string $path Session data path. If specified, the path to which data is saved will be changed.
+     * session_save_path() needs to be called before session_start() for that purpose.
+     *
+     * @return void
+     */
+    public function setSavePath($path);
 
-		/**
-		 * @return int
-		 */
-		public function getStatus();
+    /**
+     * Start new or resume existing session.
+     * Wrapper for PHP session_start() function.
+     *
+     * @return boolean This function returns TRUE if a session was successfully started, otherwise FALSE.
+     */
+    public function start();
 
-		/**
-		 * @return void
-		 */
-		public function release();
+    /**
+     * Returns the current session status
+     * Wrapper for PHP session_status() function.
+     *
+     * @return integer Returns values:
+     *  - PHP_SESSION_DISABLED if sessions are disabled.
+     *  - PHP_SESSION_NONE if sessions are enabled, but none exists.
+     *  - PHP_SESSION_ACTIVE if sessions are enabled, and one exists.
+     */
+    public function getStatus();
 
-		/**
-		 * @return void
-		 */
-		public function writeClose();
+    /**
+     * Free all session variables.
+     * Wrapper for PHP session_unset() function.
+     *
+     * @return void
+     */
+    public function release();
 
-		/**
-		 * @param string $name
-		 * @param mixed  $value
-		 *
-		 * @return void
-		 */
-		public function register($name, $value);
+    /**
+     * Write session data and end session.
+     * Wrapper for PHP session_write_close() function.
+     *
+     * @return void
+     */
+    public function writeClose();
 
-		/**
-		 * @param string $name
-		 *
-		 * @return bool
-		 */
-		public function isRegistered($name);
+    /**
+     *  Register one global variable with the current session.
+     * Wrapper for PHP session_register() function.
+     *
+     * @param string $name  A string holding the name of a variable or an
+     * array consisting of variable names or other arrays.
+     * @param mixed  $value The value of a variable.
+     *
+     * @return boolean Returns TRUE on success or FALSE on failure.
+     */
+    public function register($name, $value);
 
-		/**
-		 * @param string $name
-		 *
-		 * @return mixed
-		 */
-		public function getValue($name);
-	}
+    /**
+     * Find out whether a global variable is registered in a session.
+     * Wrapper for PHP session_is_registered() function.
+     *
+     * @param string $name The variable name.
+     *
+     * @return boolean Returns TRUE if there is a global variable with the name name registered in the current session,
+     * FALSE otherwise.
+     */
+    public function isRegistered($name);
+
+    /**
+     * Get value of global variable registered in the current session.
+     *
+     * @param string $name The variable name.
+     *
+     * @return mixed Returns value of a variable.
+     */
+    public function getValue($name);
+}

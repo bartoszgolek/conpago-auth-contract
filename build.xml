@@ -1,176 +1,90 @@
 <?xml version="1.0"?>
-<project name="Conpago.Auth.Contract" default="build" basedir=".">
-	<description>Conpago framework authorization abstraction layer.</description>
+<project name="Conpago.Auth.Contract" default="default" basedir=".">
+    <property name="src" value="./src" override="true"/>
+    <property name="build" value="./build" override="true"/>
 
-	<property name="src" location="src"/>
-	<property name="lib" location="lib"/>
-	<property name="build" location="build"/>
+    <target name="default" hidden="true">
+        <exec command="phing -f ${phing.file} -l" outputProperty="phing_targets" />
+        <echo>Please select a target.</echo>
+        <echo>${phing_targets}</echo>
+    </target>
 
-	<target name="init">
-		<!-- Create the time stamp -->
-		<tstamp/>
-		<!-- Create the build directory structure used by compile -->
-		<mkdir dir="${build}"/>
-	</target>
+    <target name="init" hidden="true">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}"/>
+    </target>
 
-	<target name="update" description="update composer packages">
-		<exec executable="composer.bat" osfamily="windows" failonerror="true">
-			<arg value="--no-dev"/>
-			<arg value="update"/>
-		</exec>
-		<exec executable="composer" osfamily="unix" failonerror="true">
-			<arg value="--no-dev"/>
-			<arg value="update"/>
-		</exec>
-	</target>
+    <target name="update" description="update composer packages">
+        <exec command="composer update" passthru="true" />
+    </target>
 
-	<target name="dev-update" description="update composer packages">
-		<exec executable="composer.bat" osfamily="windows" failonerror="true">
-			<arg value="update"/>
-		</exec>
-		<exec executable="composer" osfamily="unix" failonerror="true">
-			<arg value="update"/>
-		</exec>
-	</target>
+    <target name="phpunit">
+        <phpunit configuration="./phpunit.xml" />
+    </target>
+    <target name="phpunit-ci" hidden="true">
+        <autoloader autoloaderpath="./vendor/autoload.php"/>
+        <phpunit codecoverage="true" configuration="./phpunit.xml">
+            <formatter todir="${build}/CodeCoverage" type="clover" outfile="clover.xml" />
+            <formatter todir="${build}" type="xml" outfile="phpunit.xml" />
+        </phpunit>
+    </target>
 
-	<target name="test">
-		<exec executable=".\vendor\bin\phpunit.bat" osfamily="windows" failonerror="true">
-			<arg value="-c"/>
-			<arg value="phpunit.xml"/>
-		</exec>
-		<exec executable="./vendor/bin/phpunit" osfamily="unix" failonerror="true">
-			<arg value="-c"/>
-			<arg value="phpunit.xml"/>
-		</exec>
-	</target>
-	<target name="test-ci">
-		<exec executable=".\vendor\bin\phpunit.bat" osfamily="windows">
-			<arg value="--log-junit"/>
-			<arg value="${build}\phpunit.xml"/>
-			<arg value="--coverage-html"/>
-			<arg value="${build}\CodeCoverage"/>
-			<arg value="--coverage-clover"/>
-			<arg value="${build}\CodeCoverage\clover.xml"/>
-			<arg value="-c"/>
-			<arg value="phpunit.xml"/>
-		</exec>
-		<exec executable="./vendor/bin/phpunit" osfamily="unix">
-			<arg value="--log-junit"/>
-			<arg value="${build}/phpunit.xml"/>
-			<arg value="--coverage-html"/>
-			<arg value="${build}/CodeCoverage"/>
-			<arg value="--coverage-clover"/>
-			<arg value="${build}/CodeCoverage/clover.xml"/>
-			<arg value="-c"/>
-			<arg value="./phpunit.xml"/>
-		</exec>
-	</target>
+    <target name="phpmd">
+        <phpmd file="./src" rulesets="codesize,design,naming,unusedcode,controversial,cleancode">
+            <formatter type="text" useFile="false" outfile="." />
+        </phpmd>
+    </target>
+    <target name="phpmd-ci" hidden="true">
+        <phpmd file="./src" rulesets="codesize,design,naming,unusedcode,controversial,cleancode">
+            <formatter type="xml" outfile="${build}/pmd.xml" />
+        </phpmd>
+    </target>
 
-	<target name="phpmd">
-		<exec executable=".\vendor\bin\phpmd.bat" osfamily="windows" failonerror="true">
-			<arg value="src"/>
-			<arg value="text"/>
-			<arg value="codesize,design,naming,unusedcode,controversial,cleancode"/>
-		</exec>
-		<exec executable="./vendor/bin/phpmd" osfamily="unix" failonerror="true">
-			<arg value="src"/>
-			<arg value="text"/>
-			<arg value="codesize,design,naming,unusedcode,controversial,cleancode"/>
-		</exec>
-	</target>
-	<target name="phpmd-ci">
-		<exec executable=".\vendor\bin\phpmd.bat" osfamily="windows">
-			<arg value="src"/>
-			<arg value="xml"/>
-			<arg value="codesize,design,naming,unusedcode,controversial,cleancode"/>
-			<arg value="--reportfile"/>
-			<arg value="${build}\pmd.xml"/>
-		</exec>
-		<exec executable="./vendor/bin/phpmd" osfamily="unix">
-			<arg value="src"/>
-			<arg value="xml"/>
-			<arg value="codesize,design,naming,unusedcode,controversial,cleancode"/>
-			<arg value="--reportfile"/>
-			<arg value="${build}/pmd.xml"/>
-		</exec>
-	</target>
+    <target name="pdepend">
+        <phpdepend file="./src">
+            <logger type="summary-xml" outfile="${build}/summary.xml"/>
+            <logger type="jdepend-xml" outfile="${build}/jdepend.xml"/>
+            <logger type="jdepend-chart" outfile="${build}/jdepend.svg"/>
+            <logger type="overview-pyramid" outfile="${build}/pyramid.svg"/>
+        </phpdepend>
+    </target>
+    <target name="pdepend-ci" depends="pdepend" hidden="true">
+    </target>
 
-	<target name="pdepend">
-		<exec executable=".\vendor\bin\pdepend.bat" osfamily="windows" failonerror="true">
-			<arg value="--summary-xml=${build}\summary.xml"/>
-            <arg value="--jdepend-xml=${build}\jdepend.xml"/>
-			<arg value="--jdepend-chart=${build}\jdepend.svg"/>
-			<arg value="--overview-pyramid=${build}\pyramid.svg"/>
-			<arg value="src"/>
-		</exec>
-		<exec executable="./vendor/bin/pdepend" osfamily="unix" failonerror="true">
-			<arg value="--summary-xml=${build}/summary.xml"/>
-            <arg value="--jdepend-xml=${build}/jdepend.xml"/>
-			<arg value="--jdepend-chart=${build}/jdepend.svg"/>
-			<arg value="--overview-pyramid=${build}/pyramid.svg"/>
-			<arg value="src"/>
-		</exec>
-	</target>
-	<target name="pdepend-ci" depends="pdepend">
-	</target>
+    <target name="phpcs">
+        <phpcodesniffer standard="./vendor/conpago/conpago-dev-tools/phpcs/Conpago/ruleset.xml" format="summary" file="./src" allowedFileExtensions="php php5 inc"/>
+    </target>
+    <target name="phpcs-ci" hidden="true">
+        <phpcodesniffer standard="./vendor/conpago/conpago-dev-tools/phpcs/Conpago/ruleset.xml" format="summary" file="./src" allowedFileExtensions="php php5 inc">
+            <formatter type="checkstyle" outfile="${build}/phpcs.xml"/>
+        </phpcodesniffer>
+    </target>
 
-	<target name="phpcs">
-		<exec executable=".\vendor\bin\phpcs.bat" osfamily="windows" failonerror="true">
-			<arg value="--report=checkstyle"/>
-			<arg value="--report-file=${build}\phpcs.xml"/>
-			<arg value="--standard=.\build_scripts\ruleset.xml"/>
-			<arg value="src"/>
-		</exec>
-		<exec executable="./vendor/bin/phpcs" osfamily="unix" failonerror="true">
-			<arg value="--report=checkstyle"/>
-			<arg value="--report-file=${build}/phpcs.xml"/>
-			<arg value="--standard=./build_scripts/ruleset.xml"/>
-			<arg value="src"/>
-		</exec>
-	</target>
-	<target name="phpcs-ci">
-		<exec executable=".\vendor\bin\phpcs.bat" osfamily="windows">
-			<arg value="--report=checkstyle"/>
-			<arg value="--report-file=${build}\phpcs.xml"/>
-			<arg value="--standard=.\build_scripts\ruleset.xml"/>
-			<arg value="src"/>
-		</exec>
-		<exec executable="./vendor/bin/phpcs" osfamily="unix">
-			<arg value="--report=checkstyle"/>
-			<arg value="--report-file=${build}/phpcs.xml"/>
-			<arg value="--standard=./build_scripts/ruleset.xml"/>
-			<arg value="src"/>
-		</exec>
-	</target>
+    <target name="phpcpd">
+        <phpcpd file="./src"/>
+    </target>
+    <target name="phpcpd-ci" hidden="true">
+        <phpcpd file="./src">
+            <formatter type="pmd" outfile="${build}/phpcpd.xml"/>
+        </phpcpd>
+    </target>
 
-	<target name="phpcpd">
-		<exec executable=".\vendor\bin\phpcpd.bat" osfamily="windows" failonerror="true">
-			<arg value="src" />
-		</exec>
-		<exec executable="./vendor/bin/phpcpd" osfamily="unix" failonerror="true">
-			<arg value="src" />
-		</exec>
-	</target>
-	<target name="phpcpd-ci">
-		<exec executable=".\vendor\bin\phpcpd.bat" osfamily="windows">
-			<arg value="--log-pmd"/>
-			<arg value="${build}\phpcpd.xml" />
-			<arg value="src" />
-		</exec>
-		<exec executable="./vendor/bin/phpcpd" osfamily="unix">
-			<arg value="--log-pmd"/>
-			<arg value="${build}/phpcpd.xml" />
-			<arg value="src" />
-		</exec>
-	</target>
+    <target name="phpdoc">
+        <mkdir dir="./docs/api"/>
+        <phpdoc2 title="Conpago API Documentation" destdir="./docs/api">
+            <fileset dir="./src">
+                <include name="**/*.php" />
+            </fileset>
+        </phpdoc2>
+    </target>
+    <target name="phpdoc-ci" depends="phpdoc" hidden="true"/>
 
-	<target name="cp-config">
-		<exec executable="/bin/cp" osfamily="unix" failonerror="true">
-			<arg value="-rf"/>
-			<arg value="./build_scripts/database_jenkins.php"/>
-			<arg value="./config/database.php"/>
-		</exec>
-	</target>
+    <target name="phploc">
+        <exec command="phploc src" />
+    </target>
 
-	<target name="ci" depends="init,dev-update,test-ci,phpcpd-ci,phpmd-ci,pdepend-ci,phpcs-ci" />
+    <target name="validate" depends="phpcpd,phpmd,pdepend,phpcs,phpdoc" />
+    <target name="ci" depends="init,update,phpcpd-ci,phpmd-ci,pdepend-ci,phpcs-ci" hidden="true" />
 </project>
