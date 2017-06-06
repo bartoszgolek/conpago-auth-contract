@@ -136,16 +136,13 @@ interface ISession
     public function writeClose(): void;
 
     /**
-     *  Register one global variable with the current session.
-     * Wrapper for PHP session_register() function.
-     *
      * @param string $name  A string holding the name of a variable or an
      * array consisting of variable names or other arrays.
      * @param mixed  $value The value of a variable.
      *
-     * @return boolean Returns TRUE on success or FALSE on failure.
+     * @return void
      */
-    public function register(string $name, $value): bool;
+    public function register(string $name, $value): void;
 
     /**
      * Find out whether a global variable is registered in a session.
