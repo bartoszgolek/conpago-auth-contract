@@ -24,7 +24,7 @@ interface ISessionManager
      *
      * @return boolean Returns tru if user is logged, otherwise false.
      */
-    public function isLoggedIn();
+    public function isLoggedIn(): bool;
 
     /**
      * Log in user into system.
@@ -33,19 +33,19 @@ interface ISessionManager
      *
      * @return void
      */
-    public function login(IAuthModel $authModel);
+    public function login(IAuthModel $authModel): void;
 
     /**
      * Gets the current logged user.
      *
      * @return IAuthModel Current logged user representation.
      */
-    public function getCurrentUser();
+    public function getCurrentUser(): IAuthModel;
 
     /**
      * Log out current logged user from system.
      *
      * @return void
      */
-    public function logout();
+    public function logout(): void;
 }

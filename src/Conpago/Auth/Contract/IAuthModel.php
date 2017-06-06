@@ -24,5 +24,5 @@ interface IAuthModel
      *
      * @return string Login of the user.
      */
-    public function getLogin();
+    public function getLogin(): string;
 }

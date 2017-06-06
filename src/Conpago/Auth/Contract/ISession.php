@@ -25,7 +25,7 @@ interface ISession
      *
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function destroy();
+    public function destroy(): bool;
 
     /**
      * Get the current session id.
@@ -34,7 +34,7 @@ interface ISession
      * @return string Returns the session id for the current session or
      * the empty string ("") if there is no current session (no current session id exists).
      */
-    public function getId();
+    public function getId(): string;
 
     /**
      * Set the current session id.
@@ -44,7 +44,7 @@ interface ISession
      *
      * @return void
      */
-    public function setId($sessionId);
+    public function setId(string $sessionId): void;
 
     /**
      * Get the current session name.
@@ -52,7 +52,7 @@ interface ISession
      *
      * @return string Returns the name of the current session.
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Set the current session name.
@@ -63,7 +63,7 @@ interface ISession
      *
      * @return void
      */
-    public function setName($name);
+    public function setName(string $name): void;
 
     /**
      * Update the current session id with a newly generated one.
@@ -71,7 +71,7 @@ interface ISession
      *
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function regenerateId();
+    public function regenerateId(): bool;
 
     /**
      * Update the current session id with a newly generated one and delete old associated session file.
@@ -79,7 +79,7 @@ interface ISession
      *
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function regenerateIdAndRemoveOldSession();
+    public function regenerateIdAndRemoveOldSession(): bool;
 
     /**
      * Get the current session save path.
@@ -87,7 +87,7 @@ interface ISession
      *
      * @return string Returns the path of the current directory used for data storage.
      */
-    public function getSavePath();
+    public function getSavePath(): string;
 
     /**
      * Set the current session save path.
@@ -98,7 +98,7 @@ interface ISession
      *
      * @return void
      */
-    public function setSavePath($path);
+    public function setSavePath(string $path): void;
 
     /**
      * Start new or resume existing session.
@@ -106,7 +106,7 @@ interface ISession
      *
      * @return boolean This function returns TRUE if a session was successfully started, otherwise FALSE.
      */
-    public function start();
+    public function start(): bool;
 
     /**
      * Returns the current session status
@@ -117,7 +117,7 @@ interface ISession
      *  - PHP_SESSION_NONE if sessions are enabled, but none exists.
      *  - PHP_SESSION_ACTIVE if sessions are enabled, and one exists.
      */
-    public function getStatus();
+    public function getStatus(): int;
 
     /**
      * Free all session variables.
@@ -125,7 +125,7 @@ interface ISession
      *
      * @return void
      */
-    public function release();
+    public function release(): void;
 
     /**
      * Write session data and end session.
@@ -133,7 +133,7 @@ interface ISession
      *
      * @return void
      */
-    public function writeClose();
+    public function writeClose(): void;
 
     /**
      *  Register one global variable with the current session.
@@ -145,7 +145,7 @@ interface ISession
      *
      * @return boolean Returns TRUE on success or FALSE on failure.
      */
-    public function register($name, $value);
+    public function register(string $name, $value): bool;
 
     /**
      * Find out whether a global variable is registered in a session.
@@ -156,7 +156,7 @@ interface ISession
      * @return boolean Returns TRUE if there is a global variable with the name name registered in the current session,
      * FALSE otherwise.
      */
-    public function isRegistered($name);
+    public function isRegistered(string $name): bool;
 
     /**
      * Get value of global variable registered in the current session.
@@ -165,5 +165,5 @@ interface ISession
      *
      * @return mixed Returns value of a variable.
      */
-    public function getValue($name);
+    public function getValue(string $name);
 }
