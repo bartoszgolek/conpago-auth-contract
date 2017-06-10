@@ -23,6 +23,8 @@ interface ISessionManager
      * Check is user logged.
      *
      * @return boolean Returns tru if user is logged, otherwise false.
+     *
+     * @throws DisabledSessionsException
      */
     public function isLoggedIn(): bool;
 
@@ -32,6 +34,8 @@ interface ISessionManager
      * @param IAuthModel $authModel Representation of user to log in.
      *
      * @return void
+     *
+     * @throws DisabledSessionsException
      */
     public function login(IAuthModel $authModel): void;
 
@@ -39,6 +43,9 @@ interface ISessionManager
      * Gets the current logged user.
      *
      * @return IAuthModel Current logged user representation.
+     *
+     * @throws DisabledSessionsException
+     * @throws UserNotLoggedException
      */
     public function getCurrentUser(): IAuthModel;
 
@@ -46,6 +53,8 @@ interface ISessionManager
      * Log out current logged user from system.
      *
      * @return void
+     *
+     * @throws DisabledSessionsException
      */
     public function logout(): void;
 }
